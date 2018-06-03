@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.erel.chillsounds.favorites.FavoritesContract;
+
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager contentPager;

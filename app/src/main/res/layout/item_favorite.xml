@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:padding="8dp">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardElevation="2dp"
+        app:cardCornerRadius="4dp">
+
+        <TextView
+            android:id="@+id/itemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <SeekBar
+            android:id="@+id/volumeSeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="80dp"
+            android:layout_marginStart="8dp"/>
+
+        <ImageButton
+            android:id="@+id/removeFavorite"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/ic_favorite"
+            android:layout_marginEnd="40dp"
+            android:padding="4dp"
+            android:scaleType="fitXY"/>
+
+        <ImageButton
+            android:id="@+id/playStop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:layout_gravity="bottom|end"
+            android:src="@drawable/ic_play"
+            android:padding="4dp"
+            android:scaleType="fitXY"/>
+
+    </android.support.v7.widget.CardView>
+
+
+</RelativeLayout>
