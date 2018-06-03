@@ -1,4 +1,4 @@
-package com.erel.chillsounds.library;
+package com.erel.chillsounds.category;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,21 +17,23 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.erel.chillsounds.R;
 import com.erel.chillsounds.service.entity.Category;
+import com.erel.chillsounds.service.entity.Track;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LibraryFragment extends Fragment implements LibraryContract.View {
+public class CategoryFragment extends Fragment implements CategoryContract.View {
 
-    List<Category> library = new ArrayList<>();
+    public static final String ARG_KEY_CATEGORY = "item";
+
+    List<Track> tracks = new ArrayList<>();
     CategoriesAdapter adapter = new CategoriesAdapter();
 
-    LibraryContract.Presenter presenter = null;
+    CategoryContract.Presenter presenter = null;
 
     RecyclerView libraryRecycler;
     CircularProgressBar loadingProgress;
@@ -39,7 +41,7 @@ public class LibraryFragment extends Fragment implements LibraryContract.View {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new LibraryPresenter(getContext(), this);
+        presenter = new CategoryPresenter(this);
     }
 
     @Nullable
@@ -58,35 +60,19 @@ public class LibraryFragment extends Fragment implements LibraryContract.View {
         libraryRecycler.setAdapter(adapter);
 
         loadingProgress = view.findViewById(R.id.loadingProgress);
+
+        presenter.requestCategory();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        presenter.requestLibrary();
+    public Category getCategory() {
+        return (Category) getArguments().getSerializable(ARG_KEY_CATEGORY);
     }
 
     @Override
-    public void showLibrary(List<Category> library) {
-        this.library = library;
+    public void showTracks(List<Track> tracks) {
+        this.tracks = tracks;
         adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void showLoading() {
-        libraryRecycler.setVisibility(View.GONE);
-        loadingProgress.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideLoading() {
-        loadingProgress.setVisibility(View.GONE);
-        libraryRecycler.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void openCategoryView(Category category) {
-
     }
 
     class CategoriesAdapter extends RecyclerView.Adapter<CategoryViewHolder>{

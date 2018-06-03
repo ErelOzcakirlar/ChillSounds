@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/childContainer"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/library"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/libraryRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</LinearLayout>
+    </android.support.v7.widget.RecyclerView>
+
+    <com.budiyev.android.circularprogressbar.CircularProgressBar
+        android:id="@+id/loadingProgress"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        app:animateProgress="true"
+        app:drawBackgroundStroke="false"
+        app:foregroundStrokeCap="butt"
+        app:foregroundStrokeColor="@color/colorAccent"
+        app:foregroundStrokeWidth="4dp"
+        app:indeterminate="true"
+        app:indeterminateRotationAnimationDuration="1200"
+        app:indeterminateSweepAnimationDuration="600"
+        app:indeterminateMinimumAngle="45"
+        android:visibility="gone"/>
+
+</FrameLayout>
