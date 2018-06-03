@@ -1,0 +1,12 @@
+{
+	"favorites":[
+		{
+			"name":"Kuş",
+			"file":"bird.mp3"
+		},
+		{
+			"name":"Böcük",
+			"file":"insect.mp3"
+		}
+	]
+}

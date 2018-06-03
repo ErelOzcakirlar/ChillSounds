@@ -7,8 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.erel.chillsounds.R;
+import com.erel.chillsounds.service.RSWebService;
+import com.erel.chillsounds.service.ServiceResponse;
 
 public class FavoritesFragment extends Fragment {
 
