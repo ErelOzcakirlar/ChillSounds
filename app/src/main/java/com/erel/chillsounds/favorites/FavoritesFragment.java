@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.budiyev.android.circularprogressbar.CircularProgressBar;
 import com.erel.chillsounds.MainActivity;
 import com.erel.chillsounds.R;
 import com.erel.chillsounds.service.RSWebService;
@@ -31,9 +32,12 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
 
     FavoritesContract.Presenter presenter = null;
 
+    RecyclerView favoritesRecycler;
+    CircularProgressBar loadingProgress;
+
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         presenter = new FavoritesPresenter(getContext(), this);
     }
 
@@ -47,10 +51,12 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView favoritesRecycler = view.findViewById(R.id.favoritesRecycler);
+        favoritesRecycler = view.findViewById(R.id.favoritesRecycler);
         favoritesRecycler.setLayoutManager(new LinearLayoutManager(
                 getContext(), LinearLayoutManager.VERTICAL, false));
         favoritesRecycler.setAdapter(adapter);
+
+        loadingProgress = view.findViewById(R.id.loadingProgress);
 
         presenter.requestFavorites();
     }
@@ -63,12 +69,14 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
 
     @Override
     public void showLoading() {
-
+        favoritesRecycler.setVisibility(View.GONE);
+        loadingProgress.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-
+        loadingProgress.setVisibility(View.GONE);
+        favoritesRecycler.setVisibility(View.VISIBLE);
     }
 
     class FavoritesAdapter extends RecyclerView.Adapter<FavoriteViewHolder>{
@@ -102,6 +110,12 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
                 @Override
                 public void onStopTrackingTouch(SeekBar seekBar) {
 
+                }
+            });
+            holder.removeFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.removeFavorite(holder.getAdapterPosition());
                 }
             });
             if(item.isPlaying){

@@ -15,8 +15,12 @@ public class Track {
 
     public transient boolean isPlaying;
 
-    public transient float volume;
+    public transient float volume = 0.25f;
 
     public transient int poolId;
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Track && ((Track) obj).id.equals(this.id);
+    }
 }

@@ -1,12 +1,14 @@
 {
 	"favorites":[
 		{
-			"name":"Kuş",
-			"file":"bird.mp3"
+			"id":2,
+			"name":"Kuşlar",
+			"file":"bird.wav"
 		},
 		{
-			"name":"Böcük",
-			"file":"insect.mp3"
+			"id":4,
+			"name":"Fırtına",
+			"file":"storm.wav"
 		}
 	]
 }

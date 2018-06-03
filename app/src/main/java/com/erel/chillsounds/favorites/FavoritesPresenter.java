@@ -11,36 +11,35 @@ import com.erel.chillsounds.service.ServiceResponse;
 import com.erel.chillsounds.service.entity.Track;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-public class FavoritesPresenter implements FavoritesContract.Presenter {
+public class FavoritesPresenter implements FavoritesContract.Presenter, FavoritesInjection.FavoritesWatcher {
 
     private Context context;
     private SoundPool soundPool;
 
     private FavoritesContract.View favoritesView;
-    private List<Track> favorites = new ArrayList<>();
 
     public FavoritesPresenter(Context context, FavoritesContract.View favoritesView){
         this.context = context;
         this.favoritesView = favoritesView;
         if(Build.VERSION.SDK_INT < 21){
-            this.soundPool = new SoundPool(Integer.MAX_VALUE, AudioManager.STREAM_MUSIC, 100);
+            this.soundPool = new SoundPool(Integer.MAX_VALUE, AudioManager.STREAM_MUSIC, 0);
         }else{
             this.soundPool = new SoundPool.Builder().setMaxStreams(Integer.MAX_VALUE).build();
         }
-
+        FavoritesInjection.getInstance().addWatcher(this);
     }
 
     @Override
     public void requestFavorites() {
+        favoritesView.showLoading();
         RSWebService.getInstance(context).getFavorites(new RSWebService.ResponseCallback() {
             @Override
             public void onResponse(boolean success, @Nullable ServiceResponse response) {
+                favoritesView.hideLoading();
                 if(success && response != null && response.favorites != null){
-                    FavoritesPresenter.this.favorites = response.favorites;
-                    favoritesView.showFavorites(FavoritesPresenter.this.favorites);
+                    FavoritesInjection.getInstance().initWithFavorites(response.favorites);
                 }
             }
         });
@@ -48,14 +47,19 @@ public class FavoritesPresenter implements FavoritesContract.Presenter {
 
     @Override
     public boolean playStopForIndex(int index) {
-        Track track = favorites.get(index);
+        final Track track =  FavoritesInjection.getInstance().getFavorites().get(index);
         if(track.isPlaying){
             soundPool.stop(track.poolId);
             track.isPlaying = false;
         }else{
             try {
-                int id = soundPool.load(context.getAssets().openFd(track.file), 1);
-                soundPool.play(id, track.volume, track.volume, 1, 1, 1f);
+                soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                        soundPool.play(track.poolId, track.volume, track.volume, 1, -1, 1f);
+                    }
+                });
+                track.poolId = soundPool.load(context.getAssets().openFd(track.file), 1);
                 track.isPlaying = true;
             }catch (IOException ignored){}
         }
@@ -64,15 +68,23 @@ public class FavoritesPresenter implements FavoritesContract.Presenter {
 
     @Override
     public void setVolumeForIndex(int index, float volume) {
-        Track track = favorites.get(index);
+        Track track = FavoritesInjection.getInstance().getFavorites().get(index);
         track.volume = volume;
         soundPool.setVolume(track.poolId, volume, volume);
     }
 
     @Override
     public void removeFavorite(int index) {
-        favorites.remove(index);
-        favoritesView.showFavorites(favorites);
+        FavoritesInjection injection = FavoritesInjection.getInstance();
+        Track track = injection.getFavorites().get(index);
+        if(track.isPlaying){
+            soundPool.stop(track.poolId);
+        }
+        injection.removeFavorite(index);
     }
 
+    @Override
+    public void onFavoritesChanged(List<Track> favorites) {
+        favoritesView.showFavorites(favorites);
+    }
 }

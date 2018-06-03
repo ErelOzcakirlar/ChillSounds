@@ -6,6 +6,9 @@ import java.util.List;
 
 public class Category {
 
+    @SerializedName("id")
+    public Integer id;
+
     @SerializedName("name")
     public String name;
 

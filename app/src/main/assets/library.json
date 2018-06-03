@@ -1,0 +1,38 @@
+{
+	"library":[
+		{
+			"id":2,
+			"name":"Hayvanlar",
+			"cover":"http://www.dream-wallpaper.com/free-wallpaper/animal-wallpaper/cute-animals-4-wallpaper/1280x800/free-wallpaper-1.jpg",
+			"tracks":[
+				{
+					"id":2,
+					"name":"Kuşlar",
+					"file":"bird.mp3"
+				},
+				{
+					"id":3,
+					"name":"Ağustos Böcekleri",
+					"file":"cricket.wav"
+				}
+			]
+		},
+		{
+			"id":3,
+			"name":"Doğa",
+			"cover":"https://images.template.net/wp-content/uploads/2016/04/16083236/British-Virgin-Islands-Sunset-Nature-Wallpaper.jpg",
+			"tracks":[
+				{
+					"id":4,
+					"name":"Fırtına",
+					"file":"storm.wav"
+				},
+				{
+					"id":5,
+					"name":"Dalgalar",
+					"file":"waves.wav"
+				}
+			]
+		}
+	]
+}
