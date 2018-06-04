@@ -33,4 +33,15 @@ public class MainFragmentAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return fragments.length;
     }
+
+    public boolean tryBack(){
+        if(fragments[1] instanceof LibraryFragment){
+            LibraryFragment fragment = ((LibraryFragment)fragments[1]);
+            if(fragment.getChildFragmentManager().getBackStackEntryCount() > 0){
+                fragment.getChildFragmentManager().popBackStack();
+                return true;
+            }
+        }
+        return false;
+    }
 }

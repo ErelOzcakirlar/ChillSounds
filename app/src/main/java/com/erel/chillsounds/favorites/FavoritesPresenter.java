@@ -87,4 +87,9 @@ public class FavoritesPresenter implements FavoritesContract.Presenter, Favorite
     public void onFavoritesChanged(List<Track> favorites) {
         favoritesView.showFavorites(favorites);
     }
+
+    @Override
+    public void destroy() {
+        FavoritesInjection.getInstance().removeWatcher(this);
+    }
 }

@@ -16,6 +16,7 @@ public interface CategoryContract {
         void requestCategory();
         void favoriteForIndex(int index);
         boolean isTrackFavorite(Track track);
+        void destroy();
     }
 
 }

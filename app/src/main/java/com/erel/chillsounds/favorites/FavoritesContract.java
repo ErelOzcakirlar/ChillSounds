@@ -17,6 +17,7 @@ public interface FavoritesContract {
         boolean playStopForIndex(int index);
         void setVolumeForIndex(int index, float volume);
         void removeFavorite(int index);
+        void destroy();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.erel.chillsounds.category;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
@@ -41,6 +42,11 @@ public class CategoryPresenter implements CategoryContract.Presenter, FavoritesI
     @Override
     public boolean isTrackFavorite(Track track) {
         return FavoritesInjection.getInstance().getFavorites().contains(track);
+    }
+
+    @Override
+    public void destroy() {
+        FavoritesInjection.getInstance().removeWatcher(this);
     }
 
     @Override

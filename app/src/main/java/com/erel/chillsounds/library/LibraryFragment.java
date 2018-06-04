@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.erel.chillsounds.R;
+import com.erel.chillsounds.category.CategoryFragment;
 import com.erel.chillsounds.service.entity.Category;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -87,6 +89,16 @@ public class LibraryFragment extends Fragment implements LibraryContract.View {
     @Override
     public void openCategoryView(Category category) {
 
+        CategoryFragment fragment = new CategoryFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(CategoryFragment.ARG_KEY_CATEGORY, category);
+        fragment.setArguments(args);
+
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        String tag = "CATEGORY";
+        transaction.replace(R.id.childContainer, fragment, tag);
+        transaction.addToBackStack(tag);
+        transaction.commitAllowingStateLoss();
     }
 
     class CategoriesAdapter extends RecyclerView.Adapter<CategoryViewHolder>{
@@ -103,17 +115,7 @@ public class LibraryFragment extends Fragment implements LibraryContract.View {
         public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
             Category item = library.get(position);
             holder.itemName.setText(item.name);
-            Glide.with(getContext()).load(item.cover).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    return false;
-                }
-
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    return false;
-                }
-            }).into(holder.itemCover);
+            Glide.with(getContext()).load(item.cover).into(holder.itemCover);
             holder.itemCover.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

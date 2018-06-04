@@ -62,6 +62,12 @@ public class FavoritesFragment extends Fragment implements FavoritesContract.Vie
     }
 
     @Override
+    public void onDestroy() {
+        presenter.destroy();
+        super.onDestroy();
+    }
+
+    @Override
     public void showFavorites(List<Track> favorites) {
         this.favorites = favorites;
         adapter.notifyDataSetChanged();

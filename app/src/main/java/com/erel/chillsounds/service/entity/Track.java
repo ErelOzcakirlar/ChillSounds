@@ -2,7 +2,9 @@ package com.erel.chillsounds.service.entity;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Track {
+import java.io.Serializable;
+
+public class Track implements Serializable{
 
     @SerializedName("id")
     public Integer id;

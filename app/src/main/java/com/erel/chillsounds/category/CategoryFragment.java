@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.budiyev.android.circularprogressbar.CircularProgressBar;
@@ -31,12 +32,11 @@ public class CategoryFragment extends Fragment implements CategoryContract.View 
     public static final String ARG_KEY_CATEGORY = "item";
 
     List<Track> tracks = new ArrayList<>();
-    CategoriesAdapter adapter = new CategoriesAdapter();
+    TracksAdapter adapter = new TracksAdapter();
 
     CategoryContract.Presenter presenter = null;
 
-    RecyclerView libraryRecycler;
-    CircularProgressBar loadingProgress;
+    RecyclerView categoryRecycler;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,21 +47,25 @@ public class CategoryFragment extends Fragment implements CategoryContract.View 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_library, container, false);
+        return inflater.inflate(R.layout.fragment_category, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        libraryRecycler = view.findViewById(R.id.libraryRecycler);
-        libraryRecycler.setLayoutManager(new LinearLayoutManager(
+        categoryRecycler = view.findViewById(R.id.categoryRecycler);
+        categoryRecycler.setLayoutManager(new LinearLayoutManager(
                 getContext(), LinearLayoutManager.VERTICAL, false));
-        libraryRecycler.setAdapter(adapter);
-
-        loadingProgress = view.findViewById(R.id.loadingProgress);
+        categoryRecycler.setAdapter(adapter);
 
         presenter.requestCategory();
+    }
+
+    @Override
+    public void onDestroy() {
+        presenter.destroy();
+        super.onDestroy();
     }
 
     @Override
@@ -75,54 +79,48 @@ public class CategoryFragment extends Fragment implements CategoryContract.View 
         adapter.notifyDataSetChanged();
     }
 
-    class CategoriesAdapter extends RecyclerView.Adapter<CategoryViewHolder>{
+    class TracksAdapter extends RecyclerView.Adapter<TrackViewHolder>{
 
         @NonNull
         @Override
-        public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public TrackViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_category, parent, false);
-            return new CategoryViewHolder(view);
+                    .inflate(R.layout.item_track, parent, false);
+            return new TrackViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull final CategoryViewHolder holder, int position) {
-            Category item = library.get(position);
+        public void onBindViewHolder(@NonNull final TrackViewHolder holder, int position) {
+            Track item = tracks.get(position);
             holder.itemName.setText(item.name);
-            Glide.with(getContext()).load(item.cover).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    return false;
-                }
-
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    return false;
-                }
-            }).into(holder.itemCover);
-            holder.itemCover.setOnClickListener(new View.OnClickListener() {
+            if(presenter.isTrackFavorite(item)){
+                holder.addRemoveFavorite.setImageResource(R.drawable.ic_favorite);
+            }else{
+                holder.addRemoveFavorite.setImageResource(R.drawable.ic_favorite_border);
+            }
+            holder.addRemoveFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    presenter.openCategory(holder.getAdapterPosition());
+                    presenter.favoriteForIndex(holder.getAdapterPosition());
                 }
             });
         }
 
         @Override
         public int getItemCount() {
-            return library.size();
+            return tracks.size();
         }
     }
 
-    class CategoryViewHolder extends RecyclerView.ViewHolder{
+    class TrackViewHolder extends RecyclerView.ViewHolder{
 
         TextView itemName;
-        RoundedImageView itemCover;
+        ImageButton addRemoveFavorite;
 
-        CategoryViewHolder(View itemView) {
+        TrackViewHolder(View itemView) {
             super(itemView);
             itemName = itemView.findViewById(R.id.itemName);
-            itemCover = itemView.findViewById(R.id.itemCover);
+            addRemoveFavorite = itemView.findViewById(R.id.addRemoveFavorite);
         }
     }
 }

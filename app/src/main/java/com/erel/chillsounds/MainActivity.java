@@ -67,6 +67,17 @@ public class MainActivity extends AppCompatActivity {
         onItemSelected(0);
     }
 
+    @Override
+    public void onBackPressed() {
+        if(contentPager.getCurrentItem() == 1){
+            if(!contentAdapter.tryBack()){
+                super.onBackPressed();
+            }
+        }else {
+            super.onBackPressed();
+        }
+    }
+
     private void onItemSelected(int index){
         if (index == 0) {
             setTitle(R.string.favorites);
